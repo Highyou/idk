@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kasir Mini</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+            color: #20242b;
+            font: 15px Inter, system-ui, sans-serif
+        }
+
+        .app {
+            max-width: 1100px;
+            margin: auto;
+            padding: 28px
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 800
+        }
+
+        .badge {
+            background: #e7f5ee;
+            color: #16834c;
+            border-radius: 20px;
+            padding: 8px 13px;
+            font-size: 13px
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e7e9ed;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 4px 18px #17203308
+        }
+
+        .heading {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 16px
+        }
+
+        .search {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dfe3e8;
+            border-radius: 10px;
+            font: inherit;
+            margin-bottom: 16px
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px
+        }
+
+        .product {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            text-align: left;
+            border: 1px solid #e9ebef;
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            font: inherit
+        }
+
+        .product:hover {
+            border-color: #16a36a;
+            background: #f5fcf8
+        }
+
+        .emoji {
+            width: 44px;
+            height: 44px;
+            background: #f2f5f3;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 23px
+        }
+
+        .pname {
+            font-weight: 650
+        }
+
+        .price {
+            color: #69717d;
+            font-size: 13px;
+            margin-top: 4px
+        }
+
+        .cartrow {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
+            align-items: center;
+            padding: 13px 0;
+            border-bottom: 1px solid #eff0f2
+        }
+
+        .small {
+            color: #77808c;
+            font-size: 13px
+        }
+
+        .qty {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .qty button {
+            border: 1px solid #dfe3e8;
+            background: white;
+            border-radius: 6px;
+            width: 26px;
+            height: 26px;
+            cursor: pointer
+        }
+
+        .remove {
+            border: 0;
+            background: none;
+            color: #b43b3b;
+            cursor: pointer
+        }
+
+        .empty {
+            text-align: center;
+            color: #89919b;
+            padding: 40px 0
+        }
+
+        .summary {
+            margin-top: 18px
+        }
+
+        .sumline {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            color: #646d78
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: 800;
+            color: #20242b;
+            border-top: 1px solid #e9ebef;
+            padding-top: 16px;
+            margin-top: 16px
+        }
+
+        .pay {
+            width: 100%;
+            border: 0;
+            border-radius: 10px;
+            padding: 14px;
+            background: #15945e;
+            color: white;
+            font: 700 15px inherit;
+            cursor: pointer;
+            margin-top: 14px
+        }
+
+        .pay:hover {
+            background: #107c4e
+        }
+
+        .reset {
+            background: #f1f3f5;
+            color: #4b5562
+        }
+
+        .receipt {
+            display: none;
+            margin-top: 15px;
+            padding: 14px;
+            background: #f6faf7;
+            border-radius: 10px;
+            font-size: 13px;
+            white-space: pre-wrap
+        }
+
+        .note {
+            font-size: 12px;
+            color: #8a929b;
+            margin-top: 18px
+        }
+
+        @media(max-width:720px) {
+            .app {
+                padding: 16px
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .products {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .top {
+                margin-bottom: 16px
+            }
+        }
+
+        @media(max-width:390px) {
+            .products {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="app">
+        <header class="top">
+            <div class="brand">🧾 Kasir Mini</div><span class="badge">● Siap melayani</span>
+        </header>
+        <div class="layout">
+            <section class="panel">
+                <h1 class="heading">Pilih produk</h1><input id="search" class="search" placeholder="Cari produk…"
+                    oninput="renderProducts()">
+                <div class="products" id="products"></div>
+                <p class="note">Klik produk untuk menambahkannya ke keranjang.</p>
+            </section>
+            <section class="panel">
+                <h2 class="heading">Keranjang <span class="small" id="count"></span></h2>
+                <div id="cart"></div>
+                <div class="summary">
+                    <div class="sumline"><span>Subtotal</span><span id="subtotal">Rp0</span></div>
+                    <div class="sumline"><span>Pajak (0%)</span><span>Rp0</span></div>
+                    <div class="sumline total"><span>Total</span><span id="total">Rp0</span></div><button class="pay"
+                        onclick="checkout()">Bayar sekarang</button><button class="pay reset"
+                        onclick="clearCart()">Kosongkan keranjang</button>
+                    <div id="receipt" class="receipt"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <script>
+        const items = [{ id: 1, name: 'Kopi Susu', price: 18000, emoji: '☕' }, { id: 2, name: 'Teh Lemon', price: 12000, emoji: '🍋' }, { id: 3, name: 'Roti Cokelat', price: 15000, emoji: '🥐' }, { id: 4, name: 'Air Mineral', price: 5000, emoji: '💧' }, { id: 5, name: 'Nasi Ayam', price: 28000, emoji: '🍗' }, { id: 6, name: 'Kentang Goreng', price: 16000, emoji: '🍟' }]; let cart = {}; const rupiah = n => 'Rp' + n.toLocaleString('id-ID'); function renderProducts() { let q = document.getElementById('search').value.toLowerCase(); document.getElementById('products').innerHTML = items.filter(p => p.name.toLowerCase().includes(q)).map(p => `<button class="product" onclick="add(${p.id})"><span class="emoji">${p.emoji}</span><span><div class="pname">${p.name}</div><div class="price">${rupiah(p.price)}</div></span></button>`).join('') || '<div class="small">Produk tidak ditemukan.</div>' } function add(id) { cart[id] = (cart[id] || 0) + 1; renderCart() } function change(id, d) { cart[id] += d; if (cart[id] <= 0) delete cart[id]; renderCart() } function renderCart() { let keys = Object.keys(cart); document.getElementById('count').textContent = keys.length ? `(${keys.reduce((a, k) => a + cart[k], 0)} item)` : ''; document.getElementById('cart').innerHTML = keys.length ? keys.map(k => { let p = items.find(x => x.id == k); return `<div class="cartrow"><div><div class="pname">${p.emoji} ${p.name}</div><div class="small">${rupiah(p.price)} / item</div></div><div class="qty"><button onclick="change(${k},-1)">−</button>${cart[k]}<button onclick="change(${k},1)">+</button></div><button class="remove" onclick="delete cart[${k}];renderCart()">Hapus</button></div>` }).join('') : '<div class="empty">Keranjang masih kosong</div>'; let total = keys.reduce((a, k) => a + items.find(p => p.id == k).price * cart[k], 0); document.getElementById('subtotal').textContent = rupiah(total); document.getElementById('total').textContent = rupiah(total) } function checkout() { let keys = Object.keys(cart); if (!keys.length) { alert('Keranjang masih kosong.'); return } let total = keys.reduce((a, k) => a + items.find(p => p.id == k).price * cart[k], 0); let receipt = 'PEMBAYARAN BERHASIL ✓\n' + new Date().toLocaleString('id-ID') + '\n\n' + keys.map(k => { let p = items.find(x => x.id == k); return `${p.name} × ${cart[k]} — ${rupiah(p.price * cart[k])}` }).join('\n') + '\n\nTOTAL: ' + rupiah(total); let el = document.getElementById('receipt'); el.style.display = 'block'; el.textContent = receipt; cart = {}; renderCart() } function clearCart() { cart = {}; document.getElementById('receipt').style.display = 'none'; renderCart() } renderProducts(); renderCart();
+    </script>
+</body>
+
+</html>
